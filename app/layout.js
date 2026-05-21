@@ -1,5 +1,6 @@
 import './globals.css';
 import ThemeToggle from '@/components/ThemeToggle';
+import { Database } from 'lucide-react';
 
 export const metadata = {
   title: 'FootyLive — Live Football Streams',
@@ -97,6 +98,15 @@ export default function RootLayout({ children }) {
         <footer className="relative z-10 border-t border-zinc-200 dark:border-zinc-900/60 py-8 px-4 bg-white/60 dark:bg-[#040405]/90 transition-all duration-300 flex justify-center w-full">
           <div className="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-xs text-zinc-500 dark:text-zinc-600 px-4">
             <p>© {new Date().getFullYear()} FootyLive. All streaming sources are aggregated from third-party networks for validation purposes.</p>
+            <div className="flex items-center gap-4 shrink-0">
+              <a 
+                href="/api-hub" 
+                className="font-bold flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-900/60 bg-zinc-50/50 dark:bg-zinc-900/30 text-zinc-600 dark:text-zinc-400 hover:text-violet-650 dark:hover:text-violet-400 hover:border-violet-500/30 dark:hover:border-violet-500/30 hover:bg-violet-500/5 dark:hover:bg-violet-500/5 active:scale-95 transition-all"
+              >
+                <Database className="h-3.5 w-3.5" />
+                <span>API Developer Hub</span>
+              </a>
+            </div>
           </div>
         </footer>
       </body>

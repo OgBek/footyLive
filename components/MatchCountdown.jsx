@@ -2,15 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function MatchCountdown({ timestamp, status }) {
+  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
+    let refreshed = false;
     function update() {
       const diff = timestamp - Date.now();
       if (diff <= 0) {
         setTimeLeft({ label: 'Starting soon', isSoon: true });
+        if (!refreshed) {
+          refreshed = true;
+          router.refresh();
+        }
         return;
       }
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -23,7 +30,7 @@ export default function MatchCountdown({ timestamp, status }) {
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [timestamp]);
+  }, [timestamp, router]);
 
   if (!timeLeft || status === 'live') return null;
 

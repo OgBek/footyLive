@@ -64,6 +64,12 @@ export function normalizeWatchFootyMatch(match: any): Match {
   const leagueLogo = match.leagueLogo ? match.leagueLogo : '';
   const poster = match.poster ? match.poster : '';
   
+  const kickoffTime = match.timestamp ? new Date(match.timestamp).getTime() : 0;
+  const now = Date.now();
+  const diffMinutes = kickoffTime ? Math.floor((now - kickoffTime) / 60000) : -1;
+  // A match is dynamically live if the kickoff time has arrived/passed, and it's less than 125 minutes since kickoff
+  const isTimeLive = kickoffTime && diffMinutes >= 0 && diffMinutes < 125;
+
   const isExplicitlyLive = match.status === 'in' || match.status === 'live';
   const hasLiveScores = (match.scores?.home >= 0 || match.scores?.away >= 0) && 
                          match.currentMinuteNumber > 0 && match.currentMinuteNumber < 90;
@@ -73,10 +79,31 @@ export function normalizeWatchFootyMatch(match: any): Match {
     status = 'upcoming';
   } else if (isExplicitlyLive) {
     status = 'live';
-  } else if (match.status === 'pre' && hasLiveScores) {
+  } else if (match.status === 'pre' && (hasLiveScores || isTimeLive)) {
     status = 'live';
   } else {
     status = 'upcoming';
+  }
+
+  let currentMinuteNumber = match.currentMinuteNumber || 0;
+  let currentMinute = match.currentMinute || '';
+
+  if (status === 'live' && !currentMinuteNumber) {
+    if (diffMinutes >= 0 && diffMinutes < 125) {
+      if (diffMinutes < 45) {
+        currentMinuteNumber = diffMinutes;
+        currentMinute = `${diffMinutes}'`;
+      } else if (diffMinutes >= 45 && diffMinutes < 60) {
+        currentMinuteNumber = 45;
+        currentMinute = 'HT';
+      } else if (diffMinutes >= 60 && diffMinutes < 105) {
+        currentMinuteNumber = diffMinutes - 15;
+        currentMinute = `${diffMinutes - 15}'`;
+      } else {
+        currentMinuteNumber = 90;
+        currentMinute = '90+';
+      }
+    }
   }
 
   const country = getCountryForLeague(match.league || '');
@@ -86,7 +113,7 @@ export function normalizeWatchFootyMatch(match: any): Match {
     title: match.title || '',
     sport: 'football',
     status,
-    timestamp: match.timestamp ? new Date(match.timestamp).getTime() : Date.now(),
+    timestamp: kickoffTime || Date.now(),
     tournament: match.league || '',
     country: country,
     priority: getLeaguePriority(match.league || ''),
@@ -107,11 +134,12 @@ export function normalizeWatchFootyMatch(match: any): Match {
       name: `Server ${idx + 1} (WatchFooty)`,
       url: s.url,
     })),
-    currentMinute: match.currentMinute || '',
-    currentMinuteNumber: match.currentMinuteNumber || 0,
+    currentMinute,
+    currentMinuteNumber,
     homeScore: Math.max(0, match.scores?.home ?? match.homeScore ?? 0),
     awayScore: Math.max(0, match.scores?.away ?? match.awayScore ?? 0),
   };
+
 }
 
 export async function getLeagues(): Promise<string[]> {

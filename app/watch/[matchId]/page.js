@@ -6,7 +6,7 @@ import LiveScoreboard from '@/components/LiveScoreboard';
 import Link from 'next/link';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 
-export const revalidate = 30;
+export const revalidate = 10;
 
 export default async function WatchPage({ params, searchParams }) {
   const { matchId } = params;

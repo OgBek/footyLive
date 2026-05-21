@@ -10,8 +10,10 @@ Designed for low latency and high quality, FootyLive resolves streaming server l
 
 * 📺 **Interactive Stream Player**: Auto-detects direct stream formats (HLS/m3u8/mp4) and uses `hls.js` for native low-latency playback, alongside regular streaming iframe nodes equipped with togglable **sandbox shields** to block intrusive pop-ups and ads.
 * ⚡ **Multistream Arena**: Stream up to 4 matches at the same time in a responsive drag-to-resize viewport grid with isolated volume controls and reload capabilities.
+* 🕒 **Fast Live Kickoff Promotion**: Dynamic client-side match state elevation that promotes upcoming games to "Live Now" at their exact kickoff time, simulating realistic game timers, starting real-time score polling, and automatically swapping countdown panels with dynamic stream player modules without requiring a page reload.
 * 📅 **Match Lifecycle Management**: Split layout for **Live Now** (auto-refreshing score lists) and **Upcoming** fixtures (with real-time kickoff countdowns).
 * 🔍 **Smart Tournament Filters**: A horizontal, swipeable tournament shelf with team logos, custom click-to-scroll navigation chevrons, and dynamic league-hiding (only showing leagues that have active matches in the current tab).
+* 🛠️ **Developer API Hub**: A dedicated visual developer playground (`/api-hub`) documenting local REST endpoints, proxy cache architectures, Jaro-Winkler similarity matching systems, HMAC link signing modules, and third-party upstream API databases (Streamed.pk, CDNLive, WatchFooty).
 * ⭐ **Favorite Teams Tracking**: Star your favorite teams to pin their fixtures at the top of your dashboard automatically.
 * 🌓 **Premium Dark Mode**: Seamless theme switching using custom glassmorphic elements, rich visual glows, and harmonized color systems (no plain primaries).
 
@@ -27,7 +29,13 @@ football-stream-app/
 │   ├── api/                  # API endpoints for match data and stream redirection
 │   │   ├── match/[matchId]   # Live scoreboard endpoints
 │   │   ├── matches           # Master fixtures aggregator
-│   │   └── streams/[matchId] # Server-side link decoders & quality parameters (HD/SD)
+│   │   ├── streams/[matchId] # Server-side link decoders & quality parameters (HD/SD)
+│   │   ├── stream-redirect   # Cryptographically signed HMAC proxy validator
+│   │   └── v1/               # High-speed cached binary image proxy endpoints
+│   │       ├── league-logo   # 24h cached tournament logo proxy
+│   │       ├── team-logo     # 24h cached club badge proxy
+│   │       └── poster        # 24h cached match poster proxy
+│   ├── api-hub/              # Developer hub page documenting REST and upstream APIs
 │   ├── watch/[matchId]/      # Individual match details and live player view
 │   ├── multistream/          # Multistream arena grid layout
 │   ├── layout.js             # Sticky header, footer, global centered main layout
@@ -40,8 +48,11 @@ football-stream-app/
 │   └── ThemeToggle.jsx       # Global Dark/Light mode theme switch
 ├── lib/                      # Utilities & Core Logic
 │   ├── config.js             # Global configuration parameters
-│   └── utils/                # Helper files (favorites tracker, timestamp formats)
-├── public/                   # Static icons and logos
+│   ├── streamEngine.ts       # Registry aggregator & stream resolver orchestrator
+│   ├── cache/                # Cache manager supporting in-memory SWR & Upstash Redis
+│   ├── providers/            # Strategic Scraping strategies (WatchFooty, CdnLive, StreamedPk)
+│   └── utils/                # Helper files (favorites tracker, Jaro-Winkler team matching)
+├── public/                   # Static icons, manifest, offline fallbacks
 ├── tailwind.config.js        # Color palette variables
 └── app/globals.css           # Custom scrollbars, glassmorphism templates, animations
 ```
@@ -65,6 +76,9 @@ npm install
 ### 2. Configure Environment Variables
 Create a `.env.local` file in the root directory:
 ```env
+# Cryptographic Stream Key (Signs and validates player streams via HMAC)
+STREAM_SECRET="default_stream_hmac_secret_key_123_abc"
+
 # Optional Redis caching (Upstash) - defaults to in-memory caching if omitted
 UPSTASH_REDIS_REST_URL=""
 UPSTASH_REDIS_REST_TOKEN=""
@@ -81,8 +95,26 @@ Open [http://localhost:3000](http://localhost:3000) in your web browser.
 Compile optimized client bundles and start the production server:
 ```bash
 npm run build
+```
+Once built, run:
+```bash
 npm run start
 ```
+
+---
+
+## 🛠️ Developer REST API Directory
+
+FootyLive is equipped with public REST API endpoints designed to help external developers integrate fixtures and streams into custom sports apps:
+
+* **Aggregated Fixtures Directory**: `GET /api/matches`
+  * Retrieves all currently scheduled and live fixtures across sports scraper provider strategic networks.
+* **Match Boxscore Details**: `GET /api/match/[matchId]`
+  * Fetches real-time lineups, live scores, match commentary timelines, and team boxscore stats.
+* **Aggregated Stream Channels**: `GET /api/streams/[matchId]`
+  * Decodes, consolidates, and ranks dynamic HLS streams and iframe servers according to broadcast qualities.
+* **Cached Binary Asset Proxies**: `/api/v1/[league-logo|team-logo|poster]/[id]`
+  * Fully resolves, aggregates, and proxy caches images locally with a 24-hour TTL, preventing CORS locks on custom dashboards.
 
 ---
 

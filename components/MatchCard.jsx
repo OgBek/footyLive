@@ -197,7 +197,13 @@ export default function MatchCard({ match, tab }) {
 
       {status === 'upcoming' && timeLeft && (
         <div className="mt-3 rounded-lg bg-zinc-100/80 border border-zinc-200 dark:bg-zinc-950/70 dark:border-zinc-800 px-3 py-2 text-center text-xs font-bold text-zinc-700 dark:text-zinc-300 shadow-inner">
-          Kickoff in <span className="text-violet-600 dark:text-violet-400 font-black font-mono">{timeLeft}</span>
+          {timeLeft.toLowerCase().trim().includes('starting soon') ? (
+            <span className="text-violet-600 dark:text-violet-400 font-black animate-pulse">Starting soon</span>
+          ) : (
+            <>
+              Kickoff in <span className="text-violet-600 dark:text-violet-400 font-black font-mono">{timeLeft}</span>
+            </>
+          )}
         </div>
       )}
     </Link>
