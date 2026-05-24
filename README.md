@@ -14,6 +14,7 @@ Designed for low latency and high quality, FootyLive resolves streaming server l
 ---
 
 live demo https://footylive.vercel.app/
+https://footy-live.netlify.app/
 
 ## 🌟 Key Features
 
