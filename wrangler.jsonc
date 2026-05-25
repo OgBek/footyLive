@@ -1,0 +1,9 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "footylive",
+    "main": ".open-next/worker.js",
+    "compatibility_date": "2025-05-25",
+    "assets": {
+        "directory": ".open-next/assets"
+    }
+}
