@@ -4,7 +4,8 @@ import MatchGrid from '@/components/MatchGrid';
 export const revalidate = 10;
 
 export default async function Home({ searchParams }) {
-  const tab = searchParams?.tab || 'live';
+  const resolvedSearchParams = await searchParams;
+  const tab = resolvedSearchParams?.tab || 'live';
 
   const [allMatches, liveMatches] = await Promise.all([
     getMatches(),

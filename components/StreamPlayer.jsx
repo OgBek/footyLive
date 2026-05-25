@@ -471,7 +471,7 @@ export default function StreamPlayer({ streamUrl, channels, matchTitle, matchSta
       )}
 
       {/* Dynamic Action Toolbar (Refresh, Theater, Fullscreen, Ad-Shield Toggle) */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass-panel p-4 rounded-xl border-0 shadow-md">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 glass-panel p-4 rounded-xl shadow-md">
         
         {/* Left Side: Security Warning or Ad-Shield Toggle */}
         {!isDirectHls ? (
@@ -553,7 +553,7 @@ export default function StreamPlayer({ streamUrl, channels, matchTitle, matchSta
       </div>
 
       {/* Dedicated Servers Selection Panel */}
-      <div className="glass-panel p-4 rounded-xl border-0 shadow-md">
+      <div className="glass-panel p-4 rounded-xl shadow-md">
         {allChannels.length > 0 ? (
           <div className="flex flex-col gap-2.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 flex-wrap">

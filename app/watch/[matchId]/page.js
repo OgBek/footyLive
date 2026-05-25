@@ -9,8 +9,9 @@ import { ArrowLeft, RefreshCw } from 'lucide-react';
 export const revalidate = 10;
 
 export default async function WatchPage({ params, searchParams }) {
-  const { matchId } = params;
-  const backTab = searchParams?.tab || 'live';
+  const { matchId } = await params;
+  const resolvedSearchParams = await searchParams;
+  const backTab = resolvedSearchParams?.tab || 'live';
 
   let match = null;
   let streamUrl = null;

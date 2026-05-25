@@ -1,8 +1,11 @@
 # ⚽ FootyLive — Premium Live Sports Streaming Aggregator
 
-FootyLive is a high-performance, ad-free live football streaming aggregator built on Next.js 14. It aggregates live scoreboard metrics, team logistics, and dynamic multi-server stream networks into a premium, glassmorphic client interface. 
+FootyLive is a high-performance, ad-free live football streaming aggregator built on **Next.js 16** with **React 19** and **Tailwind CSS v4**. It aggregates live scoreboard metrics, team logistics, and dynamic multi-server stream networks into a premium, glassmorphic client interface.
 
 Designed for low latency and high quality, FootyLive resolves streaming server links on the fly, provides direct `.m3u8` video player fallbacks with client-side HLS rendering, integrates ad-blocker sandboxes, and implements a dashboard to stream multiple matches simultaneously.
+
+**🌐 Live Demo: [https://footylive.vercel.app](https://footylive.vercel.app/)**
+
 <img width="1920" height="976" alt="Screenshot 2026-05-21 103906" src="https://github.com/user-attachments/assets/d304e7f0-2c1e-4520-8935-f281a5183ccf" />
 <img width="1920" height="985" alt="Screenshot 2026-05-21 095834" src="https://github.com/user-attachments/assets/9b15e3d3-f79e-46d5-aca9-57d31b84df9a" />
 <img width="1920" height="982" alt="Screenshot 2026-05-21 095746" src="https://github.com/user-attachments/assets/83a27d6e-6a56-4116-be1f-dcee389cd451" />
@@ -13,8 +16,6 @@ Designed for low latency and high quality, FootyLive resolves streaming server l
 
 ---
 
-live demo https://footylive.vercel.app/
-
 ## 🌟 Key Features
 
 * 📺 **Interactive Stream Player**: Auto-detects direct stream formats (HLS/m3u8/mp4) and uses `hls.js` for native low-latency playback, alongside regular streaming iframe nodes equipped with togglable **sandbox shields** to block intrusive pop-ups and ads.
@@ -22,9 +23,26 @@ live demo https://footylive.vercel.app/
 * 🕒 **Fast Live Kickoff Promotion**: Dynamic client-side match state elevation that promotes upcoming games to "Live Now" at their exact kickoff time, simulating realistic game timers, starting real-time score polling, and automatically swapping countdown panels with dynamic stream player modules without requiring a page reload.
 * 📅 **Match Lifecycle Management**: Split layout for **Live Now** (auto-refreshing score lists) and **Upcoming** fixtures (with real-time kickoff countdowns).
 * 🔍 **Smart Tournament Filters**: A horizontal, swipeable tournament shelf with team logos, custom click-to-scroll navigation chevrons, and dynamic league-hiding (only showing leagues that have active matches in the current tab).
+* 📊 **Enterprise Match Statistics**: Professional stat comparison panels with visual bar charts, leading-side highlights (violet for home, emerald for away), and color-coded live commentary logs with event-type emoji markers.
 * 🛠️ **Developer API Hub**: A dedicated visual developer playground (`/api-hub`) documenting local REST endpoints, proxy cache architectures, Jaro-Winkler similarity matching systems, HMAC link signing modules, and third-party upstream API databases (Streamed.pk, CDNLive, WatchFooty).
 * ⭐ **Favorite Teams Tracking**: Star your favorite teams to pin their fixtures at the top of your dashboard automatically.
 * 🌓 **Premium Dark Mode**: Seamless theme switching using custom glassmorphic elements, rich visual glows, and harmonized color systems (no plain primaries).
+* 🌐 **Slow Network Resilience**: Stale-while-revalidate caching, aggressive image CDN caching (24h TTL), network error auto-recovery for HLS streams, and graceful loading skeletons that match the page layout.
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **Next.js** | 16.2.6 | App Router, SSR, API routes |
+| **React** | 19.2.6 | UI rendering |
+| **Tailwind CSS** | 4.3.0 | Utility-first CSS with v4 theme system |
+| **TypeScript** | 6.0.3 | Type checking (library code) |
+| **hls.js** | 1.4.0 | Client-side HLS video playback |
+| **Lucide React** | 1.16.0 | Icon library |
+| **Upstash Redis** | 1.38.0 | Optional distributed caching |
+| **Vitest** | 4.1.7 | Unit testing |
 
 ---
 
@@ -48,12 +66,17 @@ football-stream-app/
 │   ├── watch/[matchId]/      # Individual match details and live player view
 │   ├── multistream/          # Multistream arena grid layout
 │   ├── layout.js             # Sticky header, footer, global centered main layout
+│   ├── loading.js            # Skeleton loader matching page structure
+│   ├── error.js              # Graceful error boundary with retry
 │   └── page.js               # Homepage loading aggregated matches
 ├── components/               # Reusable React components
 │   ├── StreamPlayer.jsx      # Video controller, sandbox toggle, and HLS injector
 │   ├── LiveScoreboard.jsx    # Real-time score ticker with live-minute calculation
 │   ├── MatchGrid.jsx         # Fixture listings, multi-select search filters, scroll chevrons
 │   ├── MatchCard.jsx         # Card template with quality badges (HD/SD) and star toggle
+│   ├── MatchStatsSection.jsx # Enterprise stat bars & color-coded commentary logs
+│   ├── MatchCountdown.jsx    # Real-time kickoff countdown timer
+│   ├── LiveMinute.jsx        # Adjustable live minute display
 │   └── ThemeToggle.jsx       # Global Dark/Light mode theme switch
 ├── lib/                      # Utilities & Core Logic
 │   ├── config.js             # Global configuration parameters
@@ -62,8 +85,7 @@ football-stream-app/
 │   ├── providers/            # Strategic Scraping strategies (WatchFooty, CdnLive, StreamedPk)
 │   └── utils/                # Helper files (favorites tracker, Jaro-Winkler team matching)
 ├── public/                   # Static icons, manifest, offline fallbacks
-├── tailwind.config.js        # Color palette variables
-└── app/globals.css           # Custom scrollbars, glassmorphism templates, animations
+└── app/globals.css           # Tailwind v4 theme, glassmorphism, animations, scrollbars
 ```
 
 ---
@@ -72,12 +94,12 @@ football-stream-app/
 
 ### Prerequisites
 * **Node.js** v18.17.0 or higher
-* **npm** or **yarn**
+* **npm** v9+
 
 ### 1. Installation
 Clone the repository and install all dependencies:
 ```bash
-git clone https://github.com/your-username/football-stream-app.git
+git clone https://github.com/OgBek/footyLive.git
 cd football-stream-app
 npm install
 ```
@@ -88,9 +110,12 @@ Create a `.env.local` file in the root directory:
 # Cryptographic Stream Key (Signs and validates player streams via HMAC)
 STREAM_SECRET="default_stream_hmac_secret_key_123_abc"
 
-# Optional Redis caching (Upstash) - defaults to in-memory caching if omitted
-UPSTASH_REDIS_REST_URL=""
-UPSTASH_REDIS_REST_TOKEN=""
+# Optional: Upstream API base URL (defaults to https://api.watchfooty.st)
+# NEXT_PUBLIC_API_BASE="https://api.watchfooty.st"
+
+# Optional: Redis caching (Upstash) - defaults to in-memory caching if omitted
+# UPSTASH_REDIS_REST_URL=""
+# UPSTASH_REDIS_REST_TOKEN=""
 ```
 
 ### 3. Running in Development Mode
@@ -104,26 +129,34 @@ Open [http://localhost:3000](http://localhost:3000) in your web browser.
 Compile optimized client bundles and start the production server:
 ```bash
 npm run build
-```
-Once built, run:
-```bash
 npm run start
+```
+
+### 5. Running Tests
+```bash
+npm run test
+```
+
+Run a specific test file:
+```bash
+npx vitest run lib/utils/matching.test.ts
 ```
 
 ---
 
 ## 🛠️ Developer REST API Directory
 
-FootyLive is equipped with public REST API endpoints designed to help external developers integrate fixtures and streams into custom sports apps:
+FootyLive is equipped with public REST API endpoints. Full interactive documentation is available at [`/api-hub`](https://footylive.vercel.app/api-hub).
 
-* **Aggregated Fixtures Directory**: `GET /api/matches`
-  * Retrieves all currently scheduled and live fixtures across sports scraper provider strategic networks.
-* **Match Boxscore Details**: `GET /api/match/[matchId]`
-  * Fetches real-time lineups, live scores, match commentary timelines, and team boxscore stats.
-* **Aggregated Stream Channels**: `GET /api/streams/[matchId]`
-  * Decodes, consolidates, and ranks dynamic HLS streams and iframe servers according to broadcast qualities.
-* **Cached Binary Asset Proxies**: `/api/v1/[league-logo|team-logo|poster]/[id]`
-  * Fully resolves, aggregates, and proxy caches images locally with a 24-hour TTL, preventing CORS locks on custom dashboards.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/matches` | GET | Aggregated fixtures from all scraping providers, sorted by status & priority |
+| `/api/match/[matchId]` | GET | Real-time scores, lineups, boxscore stats, and live commentary |
+| `/api/streams/[matchId]` | GET | Resolved stream channels with signed proxy URLs |
+| `/api/stream-redirect` | GET | HMAC-validated proxy redirect to upstream stream URLs |
+| `/api/v1/league-logo/[id]` | GET | Cached league logo image proxy (24h TTL) |
+| `/api/v1/team-logo/[id]` | GET | Cached team badge image proxy (24h TTL) |
+| `/api/v1/poster/[id]` | GET | Cached match poster image proxy (24h TTL) |
 
 ---
 
@@ -141,6 +174,7 @@ We welcome contributions from developers, football enthusiasts, and UI/UX design
 * **Aesthetic Focus**: Maintain premium UI glassmorphism and HSL-based palettes. Avoid standard generic colors.
 * **Responsive Design**: Ensure every component works seamlessly on mobile screens, tablets, and ultrawide desktops.
 * **Sandbox Integrity**: Always test media players to ensure third-party ads and redirection triggers remain isolated.
+* **Tailwind v4**: Use `@theme` in `globals.css` for custom colors. Dark mode uses `@custom-variant dark` with class-based `.dark` toggling.
 
 ---
 

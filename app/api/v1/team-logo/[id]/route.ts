@@ -4,9 +4,9 @@ export const revalidate = 86400; // Cache for 24 hours
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   try {
     const apiBase = process.env.NEXT_PUBLIC_API_BASE || 'https://api.watchfooty.st';
     const response = await fetch(`${apiBase}/api/v1/team-logo/${id}`, {

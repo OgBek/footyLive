@@ -155,7 +155,7 @@ export default function MatchGrid({ matches, defaultTab }) {
   }, [filtered, favorites]);
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-8 relative">
       {/* Decorative desktop illustrations */}
       <Ball className="fixed left-6 top-28 h-20 w-20 opacity-40 rotate-12 hidden xl:block animate-pulse-slow" />
       <Trophy className="fixed right-6 top-32 h-20 w-20 opacity-40 rotate-45 hidden xl:block animate-pulse-slow" />
@@ -181,7 +181,7 @@ export default function MatchGrid({ matches, defaultTab }) {
       </div>
 
       {/* Control panel & Navigation */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-4 rounded-xl shadow-md dark:shadow-lg border-0">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-5 rounded-xl shadow-md dark:shadow-lg border border-zinc-200/80 dark:border-zinc-900/60">
         
         {/* Sliding Tabs */}
         <div className="flex rounded-lg bg-zinc-200/60 dark:bg-zinc-950 p-1 border border-zinc-300/45 dark:border-zinc-800/80 max-w-xs shrink-0">
@@ -220,7 +220,7 @@ export default function MatchGrid({ matches, defaultTab }) {
               placeholder="Search teams or leagues..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full sm:w-56 rounded-lg border border-zinc-300 bg-white dark:border-zinc-800/80 dark:bg-zinc-950 py-2 pl-9 pr-4 text-xs text-zinc-800 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/20 transition-all"
+              className="w-full sm:w-56 rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 py-2 pl-9 pr-4 text-xs text-zinc-800 dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/20 transition-all"
             />
           </div>
 
@@ -234,7 +234,7 @@ export default function MatchGrid({ matches, defaultTab }) {
         const isAllSelected = selectedLeagues.length === 0;
 
         return (
-          <div className="space-y-2.5 p-2.5 px-3.5 bg-white/40 dark:bg-[#08080c]/50 border border-zinc-200 dark:border-zinc-900 rounded-2xl shadow-sm transition-all duration-300">
+          <div className="space-y-3.5 p-4 sm:p-5 bg-white/80 dark:bg-[#08080c]/50 border border-zinc-200/80 dark:border-zinc-900/60 rounded-2xl shadow-sm transition-all duration-300">
             <div className="flex items-center justify-between">
               <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
                 <Filter className="h-3.5 w-3.5 text-violet-500" />
@@ -349,7 +349,7 @@ export default function MatchGrid({ matches, defaultTab }) {
 
       {/* Fixtures Listings */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 glass-panel rounded-xl border-0 shadow-md">
+        <div className="flex flex-col items-center justify-center py-20 glass-panel rounded-xl shadow-md">
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-100 border border-zinc-200 dark:bg-zinc-950 dark:border-zinc-800 shadow-inner">
             <svg className="h-6 w-6 text-zinc-400 dark:text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <circle cx="12" cy="12" r="10" />
@@ -375,7 +375,7 @@ export default function MatchGrid({ matches, defaultTab }) {
                 <h2 className="text-xs font-extrabold uppercase tracking-widest text-amber-600 dark:text-amber-400">Starred Team Fixtures</h2>
                 <div className="h-px flex-1 bg-gradient-to-r from-amber-500/30 via-zinc-300 dark:via-zinc-800 to-transparent ml-2" />
               </div>
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
                 {starredMatches.map(match => (
                   <MatchCard key={match.id} match={match} tab={tab} />
                 ))}
@@ -395,7 +395,7 @@ export default function MatchGrid({ matches, defaultTab }) {
                   <div className="h-px flex-1 bg-gradient-to-r from-zinc-300/80 dark:from-zinc-800/80 via-zinc-200/30 dark:via-zinc-900/30 to-transparent ml-2" />
                 </div>
               )}
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
                 {normalMatches.map(match => (
                   <MatchCard key={match.id} match={match} tab={tab} />
                 ))}

@@ -3,9 +3,9 @@ import { getMatchDetails } from '@/lib/streamEngine';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { matchId: string } }
+  { params }: { params: Promise<{ matchId: string }> }
 ) {
-  const { matchId } = params;
+  const { matchId } = await params;
   try {
     const match = await getMatchDetails(matchId);
     if (!match) {

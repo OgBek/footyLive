@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Database, 
   Terminal, 
@@ -20,13 +20,7 @@ import {
 export default function ApiHubPage() {
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [expandedIndex, setExpandedIndex] = useState(null);
-  const [origin, setOrigin] = useState('');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setOrigin(window.location.origin);
-    }
-  }, []);
+  const origin = 'https://footylive.vercel.app';
 
   const copyToClipboard = (text, index) => {
     navigator.clipboard.writeText(text);
@@ -258,7 +252,7 @@ Cache-Control: public, max-age=86400, s-maxage=86400]`
 
           <div className="grid grid-cols-1 gap-6">
             {localEndpoints.map((endpoint, index) => {
-              const fullUrl = `${origin || 'http://localhost:3000'}${endpoint.path}`;
+              const fullUrl = `${origin}${endpoint.path}`;
               const isExpanded = expandedIndex === index;
 
               return (

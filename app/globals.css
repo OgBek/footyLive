@@ -1,27 +1,68 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 5.9%;
-    --card-foreground: 0 0% 98%;
-    --border: 240 5.9% 15%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 263.4 70% 50.4%;
-    --accent-foreground: 0 0% 98%;
-  }
+/* === Tailwind v4 Theme Configuration === */
+@theme {
+  --color-background: #09090b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+
+  /* Custom intermediate color shades missing from default palette */
+  --color-zinc-150: #e8e8ec;
+  --color-zinc-250: #d1d1d6;
+  --color-zinc-350: #a8a8b3;
+  --color-zinc-450: #7a7a85;
+  --color-zinc-550: #5a5a65;
+  --color-zinc-650: #4a4a55;
+  --color-zinc-750: #333338;
+  --color-zinc-850: #1f1f23;
+  --color-violet-450: #9b7dff;
+  --color-violet-650: #6d28d9;
+  --color-violet-850: #3b0f7a;
+  --color-indigo-550: #5b5bd6;
+  --color-indigo-650: #4338ca;
+  --color-amber-550: #d97706;
+
+  /* Custom animation */
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  /* Font family */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-* {
+/* === Tailwind v4: Use class-based dark mode === */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* === CSS Custom Properties for theming === */
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 5.9%;
+  --card-foreground: 0 0% 98%;
+  --border: 240 5.9% 15%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 263.4 70% 50.4%;
+  --accent-foreground: 0 0% 98%;
+}
+
+/* === Base styles (no aggressive universal resets) === */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  padding: 0;
+}
+
+html,
+body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 body {
@@ -29,6 +70,7 @@ body {
   overflow-x: hidden;
 }
 
+/* === Glow Orb Decorations === */
 .glow-orb {
   position: absolute;
   border-radius: 50%;
@@ -50,12 +92,12 @@ body {
   background: radial-gradient(circle, #10b981 0%, transparent 80%);
 }
 
-/* Dynamic Glassmorphic Panel Design System */
+/* === Dynamic Glassmorphic Panel Design System === */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .dark .glass-panel {
@@ -80,7 +122,7 @@ body {
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px -2px rgba(139, 92, 246, 0.12);
 }
 
-/* Custom Adaptive Scrollbars */
+/* === Custom Adaptive Scrollbars === */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -112,7 +154,7 @@ body {
   scrollbar-width: none;  /* Firefox */
 }
 
-/* Immersive Premium Micro-Animations & Core Keyframes */
+/* === Immersive Premium Micro-Animations & Core Keyframes === */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -137,7 +179,7 @@ body {
   animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* Custom elegant horizontal scrollbar for leagues shelf */
+/* === Custom elegant horizontal scrollbar for leagues shelf === */
 .custom-horizontal-scrollbar::-webkit-scrollbar {
   height: 4px;
 }
